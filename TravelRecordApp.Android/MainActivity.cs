@@ -9,6 +9,9 @@ using Android.OS;
 using System.IO;
 using Plugin.CurrentActivity;
 using Microsoft.WindowsAzure.MobileServices;
+using Xamarin.Forms;
+using Android.Support.V4.App;
+using Android;
 
 namespace TravelRecordApp.Droid
 {
@@ -25,14 +28,19 @@ namespace TravelRecordApp.Droid
             Xamarin.FormsMaps.Init(this, savedInstanceState);
             CurrentPlatform.Init();
 
+            var thisActivity = Forms.Context as Activity;
+            ActivityCompat.RequestPermissions(thisActivity, new string[] {
+            Manifest.Permission.AccessFineLocation }, 1);
+            ActivityCompat.RequestPermissions(thisActivity,
+            new String[] { Manifest.Permission.AccessFineLocation },
+            1);
+            // CrossCurrentActivity.Current.Init(this, savedInstanceState);
 
-            CrossCurrentActivity.Current.Init(this, savedInstanceState);
+            /*  string dbName = "travel_db.sqlite";
+              string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+              string fullPath = Path.Combine(folderPath, dbName);*/
 
-            string dbName = "travel_db.sqlite";
-            string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            string fullPath = Path.Combine(folderPath, dbName);
-
-            LoadApplication(new App(fullPath));
+            LoadApplication(new App());
         }
 
         /*public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
