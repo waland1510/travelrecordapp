@@ -12,7 +12,7 @@ namespace TravelRecordApp
             InitializeComponent();
         }
 
-        private async void register_Clicked(object sender, EventArgs e)
+        private async void Register_Clicked(object sender, EventArgs e)
         {
             if (passwordEntry.Text == confirmPasswordEntry.Text)
             {
@@ -22,7 +22,7 @@ namespace TravelRecordApp
                     Password = passwordEntry.Text
                 };
 
-               await App.MobileService.GetTable<User>().InsertAsync(user);
+                User.Register(user);
                 await DisplayAlert("Success", "You are registered", "Ok");
                 await Navigation.PushAsync(new HomePage());
             }
