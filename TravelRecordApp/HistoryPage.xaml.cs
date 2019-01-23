@@ -1,39 +1,48 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
-using SQLite;
-using TravelRecordApp.Model;
-using Xamarin.Forms;
 using System.Linq;
-using Microsoft.WindowsAzure.MobileServices;
-using Xamarin.Forms.Xaml;
+using System.Text;
 using System.Threading.Tasks;
-
+using SQLite;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+using TravelRecordApp.Model;
+using TravelRecordApp.ViewModel;
 
 namespace TravelRecordApp
 {
-    [XamlCompilation(XamlCompilationOptions.Compile) ]
-
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HistoryPage : ContentPage
     {
+        HistoryVM viewModel;
         public HistoryPage()
         {
             InitializeComponent();
+
+            viewModel = new HistoryVM();
+            BindingContext = viewModel;
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            var posts = await Post.Read();
+            viewModel.UpdatePosts();
+        }
 
-            /*using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-            {
-                conn.CreateTable<Post>();
-                var posts = conn.Table<Post>().ToList();
-                postListView.ItemsSource = posts;
-            }*/
+        private void MenuItem_Clicked(object sender, EventArgs e)
+        {
+            var post = (Post)((MenuItem)sender).CommandParameter;
+            viewModel.DeletePost(post);
 
-            postListView.ItemsSource = posts;
+            viewModel.UpdatePosts();
+        }
+
+        private async void postListView_Refreshing(object sender, EventArgs e)
+        {
+            await viewModel.UpdatePosts();
+            postListView.IsRefreshing = false;
         }
     }
 }

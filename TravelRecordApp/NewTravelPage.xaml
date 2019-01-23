@@ -1,19 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TravelRecordApp.NewTravelPage">
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save"
                      Icon="save.png"
-                     Clicked="ToolbarItem_Clicked"/>
+                     Command="{Binding PostCommand}"
+                     CommandParameter="{Binding Post}"/>
     </ContentPage.ToolbarItems>
+    
     <ContentPage.Content>
-         <StackLayout>
-            <Entry x:Name="experienceEntry"
-            Placeholder="Write your experience"/>
-            
-            <ListView x:Name="venueListView"
-                      Margin="20, 0"
-                      HorizontalOptions="FillAndExpand">
+        <StackLayout x:Name="cointainerStackLayout">
+            <Entry x:Name="expretienceEntry"
+                   Text="{Binding Experience, Mode=TwoWay}"
+                   Placeholder="Write your experience"/>
+            <ListView  x:Name="venueListView"
+                       SelectedItem="{Binding Venue, Mode=TwoWay}"
+                       Margin="20, 0"
+                       HorizontalOptions="FillAndExpand">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -26,7 +31,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                
+
                                 <Label Text="{Binding name}"
                                        FontAttributes="Bold"/>
                                 <Label Grid.Row="1"
@@ -38,7 +43,6 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-                
             </ListView>
         </StackLayout>
     </ContentPage.Content>

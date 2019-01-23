@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace TravelRecordApp.Model
@@ -8,7 +10,6 @@ namespace TravelRecordApp.Model
     public class User : INotifyPropertyChanged
     {
         private string id;
-
         public string Id
         {
             get { return id; }
@@ -19,7 +20,6 @@ namespace TravelRecordApp.Model
             }
         }
 
-        
         private string email;
 
         public string Email
@@ -31,7 +31,7 @@ namespace TravelRecordApp.Model
                 OnPropertyChanged("Email");
             }
         }
-       
+
         private string password;
 
         public string Password
@@ -43,11 +43,25 @@ namespace TravelRecordApp.Model
                 OnPropertyChanged("Password");
             }
         }
+
+        private string confirmPassword;
+
+        public string ConfirmPassword
+        {
+            get { return confirmPassword; }
+            set
+            {
+                confirmPassword = value;
+                OnPropertyChanged("ConfirmPassword");
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public static async Task<bool> Login(string email, string password)
@@ -55,29 +69,33 @@ namespace TravelRecordApp.Model
             bool isEmailEmpty = string.IsNullOrEmpty(email);
             bool isPasswordEmpty = string.IsNullOrEmpty(password);
 
-            if (isEmailEmpty == true || isPasswordEmpty == true)
+            if (isEmailEmpty || isPasswordEmpty)
             {
                 return false;
             }
             else
             {
-                var user = (await App.MobileService.GetTable<User>().Where(u => u.Email == email).ToListAsync()).FirstOrDefault();
-
-                if (user != null)
-
+                try
                 {
-                    App.user = user;
-                    if (user.Password == password)
-                        return true;
+                    var user = (await App.MobileService.GetTable<User>().Where(u => u.Email == email).ToListAsync()).FirstOrDefault();
+
+                    if (user != null)
+                    {
+                        App.user = user;
+                        if (user.Password == password)
+                            return true;
+                        else
+                            return false;
+                    }
                     else
+                    {
                         return false;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
                     return false;
                 }
-
-
             }
         }
 
@@ -87,3 +105,4 @@ namespace TravelRecordApp.Model
         }
     }
 }
+
