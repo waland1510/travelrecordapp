@@ -102,6 +102,8 @@ namespace TravelRecordApp.Model
         public static async void Register(User user)
         {
             await App.MobileService.GetTable<User>().InsertAsync(user);
+            await App.Current.MainPage.DisplayAlert("Success", "You are registered", "Ok");
+            await App.Current.MainPage.Navigation.PushAsync(new MainPage());
         }
     }
 }
